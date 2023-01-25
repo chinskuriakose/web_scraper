@@ -11,8 +11,10 @@ if __name__ == "__main__":
 
     # Create a WebScraper object
     web_scraper = WebScraper(home_url=home_url)
-    web_scraper.get_services()
-    print(web_scraper.services)
+    web_scraper.get_service('AWS Private CA')
+    # print(web_scraper.services)
+    web_scraper.get_subservices('AWS Private CA')
+    web_scraper.write_to_file()
 
 
     # Create a Service object
