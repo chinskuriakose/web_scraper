@@ -11,16 +11,17 @@ if __name__ == "__main__":
 
     # Create a WebScraper object
     web_scraper = WebScraper(home_url=home_url)
-    web_scraper.get_service('AWS Private CA')
+    web_scraper.get_service('Amplify Console')
+
     # print(web_scraper.services)
     web_scraper.get_subservices('AWS Private CA')
-    web_scraper.write_to_file()
+    # web_scraper.write_to_file()
 
 
     # Create a Service object
     # service = Service()
-
-    # Create a SubService object
+    #
+    # # Create a SubService object
     # sub_service = SubService()
 
     # Add the web scraper to the service

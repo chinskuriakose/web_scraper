@@ -9,11 +9,3 @@ service_details = {'AWS Private CA': {'name': 'AWS Private CA', 'url': './AWS_AC
     'AWS::ACMPCA::Permission': {'name': 'AWS::ACMPCA::Permission', 'url': './aws-resource-acmpca-permission.html',
                                 'properties': None}}}}
 service_list = []
-
-
-def get_service_details():
-    return service_details
-
-
-def get_service_list():
-    return service_list

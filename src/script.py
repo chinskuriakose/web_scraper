@@ -1,15 +1,20 @@
 import importlib
+from importlib import import_module
 import os
 import requests
 from bs4 import BeautifulSoup
 from importlib import util as importlib_util
 import sys
+import json
 
 # from .. import YamlCleanup
 
-# from utils.utils import YamlCleanup
-from utils.utils import YamlCleanup
-from assets.service_properties import service_details, service_list
+
+# YamlCleanup = import_module("utils.utils.YamlCleanup")
+
+from web_scraper.utils.utils import YamlCleanup
+
+from web_scraper.assets.service_properties import service_details, service_list
 
 
 # import importlib
@@ -23,8 +28,10 @@ class Service:
         self.url = url
         self.subservices = subservices
 
+
     def set_subservices(self, subservices):
         self.subservices = subservices
+
 
 
 class SubService:
@@ -47,11 +54,13 @@ class WebScraper:
     property_html_tag = 'div'
     property_html_id = "YAML"
     file_path = os.path.normpath(os.path.join(__file__, '../../', 'assets', 'service_properties.py'))
+    # print(file_path)
 
     def __init__(self, home_url=None, services=None):
-        self.home_url = home_url if home_url else self.main_url
+        self.home_url = home_url if home_url else WebScraper.main_url
         self.services = services if services else {}
         self.existing_services = {}
+
         # modify_and_import('get_service_details', 'assets.service_properties', lambda x: True)
         # self.existing_service_list = []
 
@@ -66,13 +75,17 @@ class WebScraper:
     def read_from_file(self):
         # print(service_details)
         # print(type(service_details))
+        print(service_details)
+        with open('anant.txt','a') as f:
+            f.write(json.dumps(service_details))
         for service in service_details:
             # subservices = service['subservices']
             # print(service)
             # print(type(service))
             subservices_list = []
-            for subservice in service_details[service]['subservices']:
-                print(subservice)
+            for subservice in service_details[service]['subservices'].keys():
+
+                # print(subservice)
                 name = service_details[service]['subservices'][subservice]['name']
                 url = service_details[service]['subservices'][subservice]['url']
                 properties = service_details[service]['subservices'][subservice]['properties']
@@ -83,13 +96,14 @@ class WebScraper:
                         properties=properties
                     )
                 )
-
+            # print(subservices_list)
             self.existing_services[service] = Service(service,
                                                       service_details[service]['url'],
                                                       subservices_list)
+            # print(self.existing_services,'aaaaaaaa')
 
     def get_service(self, service_name):
-        if self.existing_services:
+        if service_name in self.existing_services.keys():
             self.services[service_name] = self.existing_services[service_name]
 
         else:
@@ -97,6 +111,7 @@ class WebScraper:
             aws_service_elements = soup.find_all(WebScraper.main_html_tag,
                                                  class_=WebScraper.main_html_class,
                                                  )
+            print(aws_service_elements)
 
             for element in aws_service_elements:
                 for li in element.ul:
@@ -105,7 +120,8 @@ class WebScraper:
                         if li.a.text not in service_list:
                             service_list.append(li.a.text)
 
-            print(self.services)
+            # print(self.services)
+            print(service_list)
                     # return Service(li.a.text, li.a['href'])
             # url = WebScraper.main_url.rsplit("/", 1)[0] + "/" + self.serv
 
@@ -128,6 +144,7 @@ class WebScraper:
 
     def get_subservices(self, service_name):
         # print(self.services)
+        #Change url
         url = WebScraper.main_url.rsplit(
             "/", 1)[0] + "/" + self.services[service_name].url.split("./")[1]
         soup = self.get_soup_object(url)
@@ -147,6 +164,7 @@ class WebScraper:
             WebScraper.property_html_tag, id=WebScraper.property_html_id)
         code_elem = property_elements.pre.code
         props = YamlCleanup(str(code_elem)).get_props()
+
         self.services[service_name][sub_service_name].properties = props
 
     def write_to_file(self):
@@ -173,23 +191,23 @@ class WebScraper:
 
 # aws_url = "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html"
 # aws_page = requests.get(aws_url)
-
+#
 # aws_soup = BeautifulSoup(aws_page.content, "html.parser")
-
+#
 # aws_service_elements = aws_soup.find_all("div", class_="highlights")
-
-
+#
+#
 # aws_service_list = []
-
+#
 # for element in aws_service_elements:
 #     # print(element.prettify(), end="\n"*2)
 #     for li in element.ul:
 #         aws_service_list.append((li.a.text, li.a.get('href')))
-
+#
 #     # break
-
+#
 # print(aws_service_list)
-
+#
 # aws_sub_service_list = []
 # aws_service_sub_service_mapping = {}
 # for service in aws_service_list:
@@ -206,13 +224,13 @@ class WebScraper:
 #         for li in element:
 #             aws_sub_service_list.append((li.a.text, li.a.get('href')))
 #             aws_service_sub_service_mapping[service[0]].append(li.a.text)
-
+#
 #     # print(aws_sub_service_list)
 #     # print(len(aws_sub_service_list))
 #     # break
 # print(aws_sub_service_list)
 # print(aws_service_sub_service_mapping)
-
+#
 # # service_to_subservice_list = list(zip(aws_service_list))
 # #
 # # service_to_subservice_mapping = {k:v in }
@@ -225,9 +243,11 @@ class WebScraper:
 #     sub_service_yaml_elements = sub_service_soup.find("div", id='YAML')
 #     code_elem = sub_service_yaml_elements.pre.code
 #     props = YamlCleanup(str(code_elem)).get_props()
+#
+#     print(props)
 #     sub_service_property_mapping[service[0]] = props
 #     # break
-
-# # print(aws_service_list)
-
+#
+# print(aws_service_list)
+#
 # print(sub_service_property_mapping)
