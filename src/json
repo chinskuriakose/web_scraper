@@ -1,0 +1,17 @@
+{ "ApiPassthrough" : { "Extensions":
+    {"CertificatePolicies":
+    - {"CertPolicyId": String
+  "PolicyQualifiers":
+    -{ "PolicyQualifierId": String
+  "Qualifier":
+    {"CpsUri": String}
+  "CustomExtensions":
+    - CustomExtension
+  "ExtendedKeyUsage":
+    - ExtendedKeyUsage
+  "KeyUsage":
+    KeyUsage
+  "SubjectAlternativeNames":
+    - GeneralName}
+  "Subject":
+    Subject}}

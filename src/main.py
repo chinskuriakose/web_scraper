@@ -14,7 +14,7 @@ if __name__ == "__main__":
     web_scraper.get_service('Amplify Console')
 
     # print(web_scraper.services)
-    web_scraper.get_subservices('AWS Private CA')
+    # web_scraper.get_subservices('AWS Private CA')
     # web_scraper.write_to_file()
 
 

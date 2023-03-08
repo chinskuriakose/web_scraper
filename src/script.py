@@ -12,9 +12,9 @@ import json
 
 # YamlCleanup = import_module("utils.utils.YamlCleanup")
 
-from web_scraper.utils.utils import YamlCleanup
+from utils.utils import YamlCleanup
 
-from web_scraper.assets.service_properties import service_details, service_list
+from assets.service_properties import service_details, service_list
 
 
 # import importlib

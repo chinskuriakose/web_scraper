@@ -1,0 +1,5 @@
+TO DO TASK
+-- Create class for properties
+-- Create JSON for properties key and value
+-- Scrape properties description and create class variables
+-- Integrating with main code
